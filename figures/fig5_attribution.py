@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import TwoSlopeNorm
 
-from common import LEADS, RUNS, panel_label, save, style
+from common import LEADS, PROFILE, RUNS, panel_label, save, style
 
 z = np.load(RUNS / "v4_noanchor" / "ig_attributions_disc.npz")
 names = [str(n) for n in z["names"]]
@@ -16,8 +16,8 @@ MET = ["lst_day", "mslp", "ndvi", "pop_dens", "ssrd", "sst", "swvl1", "t2m_mean"
 POS = ("cos_lat", "sin_lat", "cos_lon", "sin_lon")
 GROUPS = [
     ("Fire-driver snapshot", lambda n: n in MET, "#5dade2"),
-    ("Anomalies, 8 days", lambda n: n.startswith("anom_") and n.endswith("_w1"), "#48c9b0"),
-    ("Anomalies, 1–6 months", lambda n: n.startswith("anom_") and not n.endswith("_w1"), "#117a65"),
+    ("Anomalies, 8 days", lambda n: n.startswith("anom_") and n.endswith("_w1"), "#9e9ac8" if PROFILE == "ic" else "#48c9b0"),
+    ("Anomalies, 1–6 months", lambda n: n.startswith("anom_") and not n.endswith("_w1"), "#54278f" if PROFILE == "ic" else "#117a65"),
     ("Recent burns (≤ 3 months)", lambda n: n in ("fire_issue", "fire_recent4", "fire_recent12"), "#e74c3c"),
     ("Long fire memory (1 yr, time since last fire)",
      lambda n: n in ("fire_lastyear", "fire_recent46", "fire_tslf"), "#922b21"),

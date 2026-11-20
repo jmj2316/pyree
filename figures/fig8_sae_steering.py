@@ -7,7 +7,7 @@ import numpy as np
 import torch
 from matplotlib.lines import Line2D
 
-from common import OUT, ROOT, RUNS, panel_label, save, style
+from common import OUT, PROFILE, ROOT, RUNS, panel_label, save, style
 
 sys.path.insert(0, str(ROOT))
 from pyree.sae.interpret import load_sae  # noqa: E402
@@ -51,7 +51,7 @@ def main():
     bx = fig.add_subplot(gs[0, 1:])
     M = np.array([[interp[s]["concept_best"][c]["r"] if c in interp[s]["concept_best"] else np.nan
                    for s, _ in SAES] for c, _ in HEAT_ROWS])
-    im = bx.imshow(np.abs(M).T, cmap="Greens", vmin=0, vmax=1, aspect="auto")
+    im = bx.imshow(np.abs(M).T, cmap="Blues" if PROFILE == "ic" else "Greens", vmin=0, vmax=1, aspect="auto")
     for i in range(M.shape[0]):
         for j in range(M.shape[1]):
             bx.text(i, j, f"{M[i, j]:+.2f}", ha="center", va="center", fontsize=6,

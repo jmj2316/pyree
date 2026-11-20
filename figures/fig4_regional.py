@@ -8,7 +8,7 @@ import numpy as np
 from matplotlib.colors import ListedColormap, TwoSlopeNorm
 from matplotlib.patches import Patch
 
-from common import LEADS, OUT, ROOT, panel_label, save, style
+from common import LEADS, OUT, PROFILE, ROOT, panel_label, save, style
 from mapdata import TILE, load, preds_on_tiles
 
 sys.path.insert(0, str(ROOT))
@@ -70,6 +70,9 @@ def main():
     reg = md["region"].astype(float)
     reg[reg == 0] = np.nan
     cmap = ListedColormap(plt.get_cmap("tab20").colors[:14])
+    if PROFILE == "ic":  # 빨강-초록 조합 없는 14색
+        cmap = ListedColormap(["#1f4e79", "#9ecae1", "#e6550d", "#fdd0a2", "#7b4173", "#6baed6", "#e7ba52",
+                               "#8c6d31", "#ce6dbd", "#bdbdbd", "#737373", "#fdae6b", "#3182bd", "#de9ed6"])
     ax0.imshow(reg, cmap=cmap, vmin=0.5, vmax=14.5, extent=[-180, 180, -90, 90],
                interpolation="nearest")
     ax0.contour(md["lon"], md["lat"], md["lsm"], levels=[0.5], colors="k", linewidths=0.25)

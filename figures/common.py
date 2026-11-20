@@ -8,8 +8,12 @@ import numpy as np
 
 ROOT = Path(os.environ.get("PYREE_ROOT", Path(__file__).resolve().parents[1]))
 RUNS = Path(os.environ.get("PYREE_RUNS", ROOT / "runs"))
-OUT = ROOT / "outputs" / "figures"
+PROFILE = os.environ.get("FIG_PROFILE", "npj")  # "ic": Intelligent Computing style
+OUT = ROOT / "outputs" / ("figures_ic" if PROFILE == "ic" else "figures")
 OUT.mkdir(parents=True, exist_ok=True)
+if PROFILE == "ic" and not (OUT / "work").exists():  # analysis caches are shared between styles
+    (ROOT / "outputs" / "figures" / "work").mkdir(parents=True, exist_ok=True)
+    (OUT / "work").symlink_to(ROOT / "outputs" / "figures" / "work")
 LEADS = [1, 2, 4, 8, 16]
 
 COLORS = {
@@ -37,6 +41,12 @@ NAME = {
 }
 
 
+if PROFILE == "ic":
+    COLORS["paper_TeleViT_i"] = "#8c564b"
+ERR_COLORS = (["#0072B2", "#E69F00", "#CC79A7"] if PROFILE == "ic"
+              else ["#1a9641", "#2c7bb6", "#d7191c"])  # TP, FP, FN
+
+
 def style():
     mpl.rcParams.update({
         "font.family": "DejaVu Sans",
@@ -54,15 +64,42 @@ def style():
         "savefig.pad_inches": 0.03,
         "pdf.fonttype": 42,
     })
+    if PROFILE == "ic":
+        mpl.rcParams.update({"font.family": "serif",
+                             "font.serif": ["Nimbus Roman", "STIXGeneral", "DejaVu Serif"],
+                             "mathtext.fontset": "stix", "axes.grid": False,
+                             "xtick.minor.visible": False, "ytick.minor.visible": False})
+
+
+def _ic_cleanup(fig):
+    """IC 양식: 보조 눈금·격자 제거, 색 글씨 → 검정, 선 두께 ≥0.5 pt."""
+    from matplotlib.colors import to_rgb
+    from matplotlib.lines import Line2D
+    from matplotlib.text import Text
+    for ax in fig.axes:
+        ax.minorticks_off()
+        ax.grid(False)
+    for t in fig.findobj(Text):
+        r, g, b = to_rgb(t.get_color())
+        if max(r, g, b) - min(r, g, b) > 0.12:
+            t.set_color("black")
+    for ln in fig.findobj(Line2D):
+        if 0 < ln.get_linewidth() < 0.5:
+            ln.set_linewidth(0.5)
 
 
 def save(fig, name):
+    if PROFILE == "ic":
+        _ic_cleanup(fig)
     for ext in ("png", "pdf"):
         fig.savefig(OUT / f"{name}.{ext}")
     print("saved", OUT / f"{name}.png")
 
 
 def panel_label(ax, s, x=-0.12, y=1.02):
+    if PROFILE == "ic":
+        ax.text(x, y, f"({s})", transform=ax.transAxes, fontsize=10, va="bottom", ha="left")
+        return
     ax.text(x, y, s, transform=ax.transAxes, fontsize=10, fontweight="bold",
             va="bottom", ha="left")
 

@@ -102,7 +102,7 @@ python -m pyree.sae.interpret --run_dir runs/v4_noanchor
 python -m pyree.sae.steer_eval --run_dir runs/v4_noanchor --n_random 20
 ```
 
-**Figures and tables** (written to `outputs/figures/`)
+**Figures and tables** (written to `outputs/figures/`; set `FIG_PROFILE=ic` for the journal style with serif type and no grids, written to `outputs/figures_ic/`)
 ```bash
 cd figures
 python score_land.py && python case_studies.py && python fig4_regional.py

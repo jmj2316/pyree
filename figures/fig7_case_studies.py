@@ -8,7 +8,7 @@ from matplotlib.colors import TwoSlopeNorm
 from matplotlib.patches import Patch, Rectangle
 
 from case_studies import CACHE, EVENTS
-from common import COLORS, LEADS, NAME, OUT, panel_label, save, style
+from common import COLORS, LEADS, NAME, OUT, PROFILE, panel_label, save, style
 from mapdata import load
 
 HIGHLIGHT = ["Amazon 2019", "Indonesia 2019", "SE Australia 2019–20", "Siberian Arctic 2020"]
@@ -31,7 +31,8 @@ def main():
     ax = fig.add_subplot(top[0, 0])
     ax.contour(md["lon"], md["lat"], md["lsm"], levels=[0.5], colors="0.35", linewidths=0.3)
     for k, (name, (la0, la1, lo0, lo1), _) in enumerate(EVENTS):
-        col = plt.get_cmap("tab10")(k)
+        col = (["#0072B2", "#E69F00", "#56B4E9", "#D55E00", "#CC79A7", "#8c564b", "#000000", "#999999"][k]
+               if PROFILE == "ic" else plt.get_cmap("tab10")(k))
         ax.add_patch(Rectangle((lo0, la0), lo1 - lo0, la1 - la0, fill=False, ec=col, lw=1.3))
         below = name.startswith("Pantanal")  # 아마존 상자와 라벨이 겹치지 않게 아래에
         ax.text(lo0 + (lo1 - lo0) / 2, (la0 - 3) if below else (la1 + 3), str(k + 1), color=col,

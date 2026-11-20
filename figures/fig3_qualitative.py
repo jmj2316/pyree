@@ -7,7 +7,7 @@ from matplotlib.colors import ListedColormap, PowerNorm
 from matplotlib.patches import Patch
 from sklearn.metrics import precision_recall_curve
 
-from common import OUT, RUNS, panel_label, save, style
+from common import ERR_COLORS, OUT, RUNS, panel_label, save, style
 from mapdata import TILE, load, preds_on_tiles
 
 THR_CACHE = OUT / "work" / "f1_thresholds_val.json"
@@ -79,7 +79,7 @@ def main():
                                                                             "hspace": 0.1})
     pcmap = plt.get_cmap("YlOrRd").copy()
     pcmap.set_bad("#e6e6e6")
-    ecmap = ListedColormap(["#ffffff", "#1a9641", "#2c7bb6", "#d7191c"])  # TN, TP, FP, FN
+    ecmap = ListedColormap(["#ffffff"] + ERR_COLORS)  # TN, TP, FP, FN
     for r_, (lab, h, ii, jj, T) in enumerate(rows):
         Po, Cm, Y = scene(md, "v4_noanchor", h, T, ii, jj)
         Pt, _, _ = scene(md, f"televit_orig_h{h}", h, T, ii, jj)
@@ -136,9 +136,9 @@ def main():
     cb.set_ticks([0, 0.05, 0.2, 0.4, 0.6, 0.8, 1.0])
     cb.set_label("Burn probability (square-root scale; observed: 0/1)", fontsize=6.8)
     cb.ax.tick_params(labelsize=6.3)
-    fig.legend(handles=[Patch(color="#1a9641", label="Hit (TP)"),
-                        Patch(color="#2c7bb6", label="False alarm (FP)"),
-                        Patch(color="#d7191c", label="Miss (FN)")],
+    fig.legend(handles=[Patch(color=ERR_COLORS[0], label="Hit (TP)"),
+                        Patch(color=ERR_COLORS[1], label="False alarm (FP)"),
+                        Patch(color=ERR_COLORS[2], label="Miss (FN)")],
                loc="upper center", bbox_to_anchor=(0.78, 0.075), ncol=1, frameon=False,
                fontsize=6.3, handlelength=1.2, columnspacing=0.8)
     save(fig, "fig3_qualitative_error_maps")
