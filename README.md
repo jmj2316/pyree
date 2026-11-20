@@ -107,6 +107,7 @@ python -m pyree.sae.steer_eval --run_dir runs/v4_noanchor --n_random 20
 cd figures
 python score_land.py && python case_studies.py && python fig4_regional.py
 python fig2_lead_curve.py   # etc.; one script per figure, see file headers
+python persistence_baselines.py   # persistence and persistence+climatology baselines
 python make_tables.py
 ```
 
