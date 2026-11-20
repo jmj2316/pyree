@@ -1,5 +1,5 @@
 """
-WildfireStepsNet — Sonny(StormBreaker5)의 StepsNet 백본을 SeasFire 산불 예측에 이식.
+WildfireStepsNet — Sonny(Sonny)의 StepsNet 백본을 SeasFire 산불 예측에 이식.
 
 원 Sonny (mj/sonny/networks/sonny.py)의 핵심 아이디어를 그대로 가져옴:
   - 변수를 두 그룹(slow/fast)으로 나눠 서로 다른 폭(d1/d2)의 sub-transformer에 태움
